@@ -17,12 +17,10 @@ if [ $1 = "help" ];then
 	echo -e "${GREEN}>>> Possible commands:\n ${NC}"
 	echo -e "${BLUE}build --- Build an image based on DockerFile in current dir\n"
 	echo -e "${BLUE}run --- Create and run container from image${NC}\n"
-	echo -e "${BLUE}console --- Gives terminal access (/bin/bash) access to a running container${NC}\n"
 fi
 
 if [ "$1" = "build" ]; then
 	echo -e "${GREEN}>>> Building dexrov-${space} image ...${NC}"
-	#/usr/bin/docker build --build-arg user=$user --build-arg userid=$userid --build-arg group=$group --build-arg groupid=$groupid -t ${user}/${repoName}:${imageTag} .
 	docker build -t ${user}/${containerName}:${containerTag} .
 fi
 
@@ -47,7 +45,7 @@ if [ "$1" = "run" ]; then
 		    DRI_ARGS="$DRI_ARGS --privileged"
 		fi
 
-	docker run --runtime=nvidia -it \
+	docker run --rm --runtime=nvidia -it \
 	    $DRI_ARGS \
 	    --name="${containerName}" \
 	    --hostname="${myhostname}" \
@@ -56,16 +54,10 @@ if [ "$1" = "run" ]; then
 	    --env="QT_X11_NO_MITSHM=1" \
 	    --workdir="/root" \
 	    --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
-	    --volume=`pwd`/input_data:/root/input_data \
-	    --volume=`pwd`/output_data:/root/output_data \
-	    ${user}/${containerName}:${containerTag}
-	    # error code 1 is harmless (meaning the container has been created already beforehand)
+	    --volume=`pwd`/input_data:/root/input_data:rw \
+	    --volume=`pwd`/output_data:/root/output_data:rw \
+	    ${user}/${containerName}:${containerTag} /bin/bash -c "cd /root/camodocal/build/bin && ./$2 && chmod a+rw /root/output_data/*"
 	    rc=$?; if [[ $rc != 0 && $rc != 1 ]]; then exit $rc; fi
 
 
-fi
-
-if [ $1 = "console" ]; then
-	echo -e "${GREEN}>>> Entering console in container ${containerName} ...${NC}"
-	docker exec -it ${containerName} /bin/bash
 fi
