@@ -29,7 +29,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -q -y --no-
     libblas-dev \
 	libgoogle-glog-dev \
 	libsuitesparse-dev \
-	libboost-dev \
+	libboost-dev \	
 	libboost-all-dev \
 	pkg-config \
 	libeigen3-dev \  
@@ -46,18 +46,23 @@ RUN cd ceres-bin && make install
 # install OpenCV
 RUN git clone https://github.com/opencv/opencv.git
 RUN git clone https://github.com/opencv/opencv_contrib.git
-RUN cd opencv && git checkout 3.4
-RUN cd opencv_contrib && git checkout 3.4
+RUN cd opencv && git checkout 3.4.7
+RUN cd opencv_contrib && git checkout 3.4.7
 # clone camodocal
 RUN git clone https://github.com/hengli/camodocal.git
-# copy script to install OpenCV and camodocal
-COPY make_opencv_camodocal.sh /root
-RUN chmod a+x $HOME/make_opencv_camodocal.sh 
-RUN /bin/bash -c ". $HOME/make_opencv_camodocal.sh"
+# copy script to install OpenCV
+RUN echo "test"
+COPY make_opencv.sh /root
+RUN chmod a+x $HOME/make_opencv.sh 
+RUN /bin/bash -c ". $HOME/make_opencv.sh"
+# copy script to install camodocal
+COPY make_camodocal.sh /root
+RUN chmod a+x $HOME/make_camodocal.sh 
+RUN /bin/bash -c ". $HOME/make_camodocal.sh"
 
 # libdc1394 does not work in Docker, so disable it (we anyways don't need it in here)
 RUN ln /dev/null /dev/raw1394 && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get remove -q -y libgtk2.0-dev
 #Manual fix to prevent GTK errors
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -q -y --no-install-recommends libgtk2.0-dev
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -q -y --no-install-recommends libgtk2.0-dev -qqy x11-apps
 
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 GREEN='\033[1;32m'
 NC='\033[0m' # no color
-nproc=2
+nproc=6
 user=`id -u -n`
 
 #create a build dir for OpenCV and build it
@@ -19,14 +19,4 @@ ln -s /usr/local/cuda-8.0/targets/x86_64-linux/lib/libcudart.so /usr/lib/libcuda
 ln -s /usr/local/cuda-8.0/targets/x86_64-linux/lib/libcudart.so /usr/lib/libopencv_dep_cudart.so
 
 echo -e "\n${GREEN}>>> Finish installing OpenCV in virtual enviroment ${virtualEnvName} ${NC}"
-
-echo -e "\n${GREEN}>>> Installing Camodocal ${NC}"
-cd $HOME/.
-mkdir -p $HOME/camodocal/build && cd $HOME/camodocal/build && cmake -DCMAKE_BUILD_TYPE=Release ..
-make -j$nproc || exit $?
-make install || exit $?
-
-echo -e "\n${GREEN}>>> Finish installation ${NC}"
-
-
 
