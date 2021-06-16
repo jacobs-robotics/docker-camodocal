@@ -20,7 +20,7 @@ if [ $1 = "help" ];then
 fi
 
 if [ "$1" = "build" ]; then
-	echo -e "${GREEN}>>> Building dexrov-${space} image ...${NC}"
+	echo -e "${GREEN}>>> Building camodocal image ...${NC}"
 	docker build -t ${user}/${containerName}:${containerTag} .
 fi
 
