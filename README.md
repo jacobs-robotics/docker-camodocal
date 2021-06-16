@@ -21,42 +21,42 @@ Please use a docker and nvidia-docker version that is compatible with these vers
 
 ### Installing
 
-After cloning the repository, you only need to run the next command (UNIX systems):
+After cloning the repository, run the next command (UNIX systems):
 
 ```
 ./docker_helper.sh build
 ```
 
-If you are using a Windows plaform, run the following command:
-
-```
-docker build camodocal:1.0 .
-```
-
-## Usage
+### Usage
 
 After the container is built; run the following command:
 
 ```
-./docker_helper.sh build run "CAMODOCAL_COMMAND"
+./docker_helper.sh build run [CAMODOCAL_COMMAND]
 ```
 
-where CAMODOCAL_COMMAND is a string with the instruction and parameters needed as defined in the [CamOdoCal repository](https://github.com/hengli/camodocal). For example:
+where CAMODOCAL_COMMAND is a string with the instruction and parameters needed by camodocal as defined in the [CamOdoCal repository](https://github.com/hengli/camodocal). For example:
 
 ```
 ./docker_helper.sh run "stereo_calib -w 8 -h 6 -s 0.06 --camera-model kannala-brandt -i /root/input_data -o /root/output_data"
 ```
 
-The */input_data* and */output_data* directories are mounted to the docker container for the user to save the files needed to run these commands as well as their output. Please, be sure to add the */root* parent directory when writing the path to these directories. You can run the previous command with the sample images given in this repository. You can always run the *--help* command to see a list of available parameters:
+The */input_data* and */output_data* directories are mounted to the docker container for the user to save the files needed to run these commands as well as their output. Please, be sure to add the */root* parent directory when writing the path to these directories. You can always run the *--help* command to see a list of available parameters:
 
 ```
 ./docker_helper.sh run "intrinsic_calib --help"
 ```
 
-## Tips
+## Tips & Comments
 
-If an error about GTK appears, try the ``xhost +`` command in your host machine to enable connections to the X server from the docker container.
-This will allow you to see the window displays from the Camodocal software. 
+* If an error about GTK appears, try the ``xhost +`` command in your host machine to enable connections to the X server from the docker container.
+This will allow you to see the window displays from the Camodocal software.
+
+* The docker image uses the next library versions: **Eigen 3.2.10**, **Ceres 1.11.0**, **OpenCV 3.4.7** as they have been reported to solve common encountered bugs during compilation and runtime.
+
+* If runtime errors appear related to the Jacobian matrix not defined, try using the ``--opencv`` flag as part of the CAMODOCAL_COMMAND to set opencv as the module to detect the corners of the calibration checkerboads.
+
+
 
 ## References
 
@@ -64,6 +64,5 @@ In case of using this software for research activities, please reference this re
 
 ```
 - Lionel Heng, Paul Furgale, and Marc Pollefeys,
-Leveraging Image-based Localization for Infrastructure-based Calibration of a Multi-camera Rig,
-Journal of Field Robotics (JFR), 2015.
+Leveraging Image-based Localization for Infrastructure-based Calibration of a Multi-camera Rig, Journal of Field Robotics (JFR), 2015.
 ```
