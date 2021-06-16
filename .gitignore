@@ -1,0 +1,5 @@
+input_data/*
+!input_data/dummy_file.txt
+output_data/*
+!output_data/dummy_file.txt
+
