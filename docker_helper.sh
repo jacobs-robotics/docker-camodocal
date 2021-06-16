@@ -27,37 +27,32 @@ fi
 if [ "$1" = "run" ]; then
 
 	echo -e "${GREEN}>>> Initializing "${containerName}" container...${NC}"
-		if [ -d /sys/module/nvidia ]; then
+	
+	#check for host devices
+	DRI_ARGS=""
+	if [ -d /dev/dri ]; then
 
-		    NVIDIA_ARGS=""
-		    for f in `ls /dev | grep nvidia`; do
-		        NVIDIA_ARGS="$NVIDIA_ARGS --volume=/dev/${f}:/dev/${f}:rw"
-		    done
+		for f in `find /dev/dri -type c`; do
+				DRI_ARGS="$DRI_ARGS --device=$f"
+		done
 
-		    NVIDIA_ARGS="$NVIDIA_ARGS --privileged"
-		elif [ -d /dev/dri ]; then
+		DRI_ARGS="$DRI_ARGS --privileged"
+	fi
 
-		    DRI_ARGS=""
-		    for f in `ls /dev/dri/*`; do
-		        DRI_ARGS="$DRI_ARGS --device=$f"
-		    done
 
-		    DRI_ARGS="$DRI_ARGS --privileged"
-		fi
-
-	docker run --rm --runtime=nvidia -it \
-	    $DRI_ARGS \
-	    --name="${containerName}" \
-	    --hostname="${myhostname}" \
-	    --net=default \
-	    --env="DISPLAY" \
-	    --env="QT_X11_NO_MITSHM=1" \
-	    --workdir="/root" \
-	    --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
-	    --volume=`pwd`/input_data:/root/input_data:rw \
-	    --volume=`pwd`/output_data:/root/output_data:rw \
-	    ${user}/${containerName}:${containerTag} /bin/bash -c "cd /root/camodocal/build/bin && ./$2 && chmod a+rw /root/output_data/*"
-	    rc=$?; if [[ $rc != 0 && $rc != 1 ]]; then exit $rc; fi
+	docker run --rm -it --gpus all \
+	$DRI_ARGS \
+	--name="${containerName}" \
+	--hostname="${myhostname}" \
+	--net=default \
+	--env="DISPLAY" \
+	--env="QT_X11_NO_MITSHM=1" \
+	--workdir="/root" \
+	--volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
+	--volume=`pwd`/input_data:/root/input_data:rw \
+	--volume=`pwd`/output_data:/root/output_data:rw \
+	${user}/${containerName}:${containerTag} /bin/bash -c "cd /root/camodocal/build/bin && ./$2 && chmod a+rw /root/output_data/*"
+	rc=$?; if [[ $rc != 0 && $rc != 1 ]]; then exit $rc; fi
 
 
 fi
