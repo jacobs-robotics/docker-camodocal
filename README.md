@@ -53,6 +53,11 @@ The */input_data* and */output_data* directories are mounted to the docker conta
 ./docker_helper.sh run "intrinsic_calib --help"
 ```
 
+## Tips
+
+If an error about GTK appears, try the ``xhost +`` command in your host machine to enable connections to the X server from the docker container.
+This will allow you to see the window displays from the Camodocal software. 
+
 ## References
 
 In case of using this software for research activities, please reference this repository as well as the following paper. See the full list of papers related to CamOdoCal in its [repository](https://github.com/hengli/camodocal)):
