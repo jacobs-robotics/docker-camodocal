@@ -7,10 +7,17 @@ Docker container with the [CamOdoCal](https://github.com/hengli/camodocal) camer
 
 ### Prerequisites
 
-In order to build and run the docker container, the following is needed:
+#### Latest test with
 
-* [Docker](https://docs.docker.com/install/) >= 1.12  
-* [nvidia-docker2](https://github.com/NVIDIA/nvidia-docker) (Note that you need NVDIA drivers)
+* [Docker](https://docs.docker.com/install/) --> 20.10.7  
+* [nvidia-docker2](https://github.com/NVIDIA/nvidia-docker) --> 20.10.7 (Note that you need NVDIA drivers)
+
+Please use a docker and nvidia-docker version that is compatible with these versions.
+
+~~In order to build and run the docker container, the following is needed:~~
+
+~~* [Docker](https://docs.docker.com/install/) >= 1.12~~  
+~~* [nvidia-docker2](https://github.com/NVIDIA/nvidia-docker) (Note that you need NVDIA drivers)~~
 
 ### Installing
 
@@ -37,13 +44,13 @@ After the container is built; run the following command:
 where CAMODOCAL_COMMAND is a string with the instruction and parameters needed as defined in the [CamOdoCal repository](https://github.com/hengli/camodocal). For example:
 
 ```
-./docker_helper.sh build run "stereo_calib -w 8 -h 6 -s 0.06 --camera-model kannala-brandt -i /root/input_data -o /root/output_data"
+./docker_helper.sh run "stereo_calib -w 8 -h 6 -s 0.06 --camera-model kannala-brandt -i /root/input_data -o /root/output_data"
 ```
 
 The */input_data* and */output_data* directories are mounted to the docker container for the user to save the files needed to run these commands as well as their output. Please, be sure to add the */root* parent directory when writing the path to these directories. You can run the previous command with the sample images given in this repository. You can always run the *--help* command to see a list of available parameters:
 
 ```
-./docker_helper.sh build run "intrinsic_calib --help"
+./docker_helper.sh run "intrinsic_calib --help"
 ```
 
 ## References
