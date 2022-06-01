@@ -60,7 +60,15 @@ RUN chmod a+x $HOME/make_opencv.sh
 RUN /bin/bash -c ". $HOME/make_opencv.sh"
 
 # downlaod and install camodocal
-RUN git clone https://github.com/hengli/camodocal.git
+ARG fork_url
+# if fork_url is not set, use the default upstream repository
+RUN if ["$fork_url" == ""]; then \
+	echo "Cloning: https://github.com/hengli/camodocal.git"; \
+    git clone https://github.com/hengli/camodocal.git; \
+	else \
+	echo "Cloning: $fork_url"; \
+	git clone $fork_url; \
+fi
 COPY make_camodocal.sh /root
 RUN chmod a+x $HOME/make_camodocal.sh 
 RUN /bin/bash -c ". $HOME/make_camodocal.sh"
