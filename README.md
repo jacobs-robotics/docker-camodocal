@@ -24,7 +24,7 @@ Please use a docker and nvidia-docker version that is compatible with these vers
 After cloning the repository, run the next command (UNIX systems):
 
 ```
-./docker_helper.sh build
+./docker_helper.sh --build
 ```
 
 ### Usage
@@ -32,7 +32,7 @@ After cloning the repository, run the next command (UNIX systems):
 After the container is built; run the following command:
 
 ```
-./docker_helper.sh --build [CAMODOCAL_COMMAND]
+./docker_helper.sh --run [CAMODOCAL_COMMAND]
 ```
 
 where CAMODOCAL_COMMAND is a string with the instruction and parameters needed by camodocal as defined in the [CamOdoCal repository](https://github.com/hengli/camodocal). For example:
