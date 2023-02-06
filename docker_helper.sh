@@ -23,14 +23,14 @@ if [ $1 = "--help" ];then
 fi
 
 if [ "$1" = "--build" ]; then
-	echo -e "${GREEN}>>> Building camodocal image ...${NC}"
-	docker build -t ${user}/${containerName}:${containerTag} .
+	echo -e "${GREEN}>>> Building camodocal image ...${NC} : ${2}"
+	docker build -t ${user}/${containerName}:${containerTag} --build-arg fork_url=$2 .
 	flag_issue_command=1
 fi
 
 if [ "$1" = "--run-rm" ]; then
 
-	echo -e "${GREEN}>>> Initializing "${containerName}" container...${NC}"
+	echo -e "${GREEN}>>> Initializing "${containerName}:${containerTag}" container...${NC}"
 	
 	#check for host devices
 	DRI_ARGS=""
@@ -46,7 +46,7 @@ if [ "$1" = "--run-rm" ]; then
 
 	docker run --rm -it --gpus all \
 	$DRI_ARGS \
-	--name="${containerName}" \
+	--name="${containerName}_${containerTag}" \
 	--hostname="${myhostname}" \
 	--net=default \
 	--env="DISPLAY" \
@@ -63,7 +63,7 @@ fi
 
 if [ "$1" = "--run-keep" ]; then
 
-	echo -e "${GREEN}>>> Initializing "${containerName}" container...${NC}"
+	echo -e "${GREEN}>>> Initializing "${containerName}:${containerTag}" container...${NC}"
 	
 	#check for host devices
 	DRI_ARGS=""
@@ -79,7 +79,7 @@ if [ "$1" = "--run-keep" ]; then
 
 	docker run --rm -it --gpus all \
 	$DRI_ARGS \
-	--name="${containerName}" \
+	--name="${containerName}_${containerTag}" \
 	--hostname="${myhostname}" \
 	--net=default \
 	--env="DISPLAY" \
@@ -96,7 +96,7 @@ fi
 
 if [ "$1" == "--terminal" ] || [ "$1" == "-t" ]; then
     echo -e "${GREEN}>>> Entering console in container ${container_name} ...${NC}"
-    docker exec -ti ${container_name} /bin/bash -c "cd /root/camodocal/build/bin && /bin/bash"
+    docker exec -ti ${container_name}_${containerTag} /bin/bash -c "cd /root/camodocal/build/bin && /bin/bash"
     flag_issue_command=1
 fi
 
